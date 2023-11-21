@@ -1,0 +1,27 @@
+.tx-feediting-fluidtemplate:hover {
+    /*padding: 5px;*/
+    /*margin: 5px;*/
+    outline: 1px solid #eee;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
+.tx-feediting-fluidtemplate-pages:hover {
+    outline: none;
+    box-shadow: none;
+}
+
+.tx-feediting-panel {
+    background: #eee;
+    font-style: italic;
+    padding: 2px 10px;
+}
+
+.icon-size-small svg {
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+    width: 16px;
+}
+
+

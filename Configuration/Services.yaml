@@ -1,0 +1,16 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  GeorgRinger\Feediting\:
+    resource: '../Classes/*'
+
+  GeorgRinger\Feediting\Edit\Clipboar:
+    public: true
+
+  GeorgRinger\Feediting\ContentObject\EditableFluidTemplateContentObject:
+    tags:
+      - name: frontend.contentobject
+        identifier: 'FLUIDTEMPLATE'
