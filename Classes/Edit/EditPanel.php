@@ -119,14 +119,24 @@ class EditPanel
 
     protected function move(array &$data): void
     {
-        $link = (string)$this->uriBuilder->buildUriFromRoute(
-            'move_element',
-            [
-                'table' => $this->tableName,
-                'uid' => $this->recordId,
-                'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
-            ]
-        );
+        if ($this->tableName === 'pages') {
+            $link = (string)$this->uriBuilder->buildUriFromRoute(
+                'move_page',
+                [
+                    'uid' => $this->recordId,
+                    'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                ]
+            );
+        } else {
+            $link = (string)$this->uriBuilder->buildUriFromRoute(
+                'move_element',
+                [
+                    'table' => $this->tableName,
+                    'uid' => $this->recordId,
+                    'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                ]
+            );
+        }
         $label = $this->getLinkLabel('move', 'actions-document-move');
         $data[] = '<a href="' . $link . '">' . $label . '</a>';
     }
