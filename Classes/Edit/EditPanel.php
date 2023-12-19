@@ -87,7 +87,10 @@ class EditPanel
             return '';
         }
         $this->addStyles();
-        return '<div class="tx-feediting-panel">' . $this->tableName . ':' . $this->recordId . implode(LF, $data) . '</div>';
+        array_walk($data, static function (string &$value) {
+            $value = '<span class="tx-feediting-element">' . $value . '</span>';
+        });
+        return '<div class="tx-feediting-panel"><span class="tx-feediting-type">' . $this->tableName . ':<span>' . $this->recordId . '</span></span>' . implode(LF, $data) . '</div>';
     }
 
     protected function history(array &$data)
@@ -195,6 +198,8 @@ class EditPanel
         // todo which language?
 
         $defVals = [];
+        $links = [];
+        $identifier = 'dropdown-' . md5($this->tableName . $this->recordId);
         foreach ($items as $item) {
             $link = (string)$this->uriBuilder->buildUriFromRoute('record_edit', [
                 'edit' => [
@@ -210,7 +215,19 @@ class EditPanel
                     ]),
                 ],
             ]);
-            $data[] = '<a href="' . htmlspecialchars($link) . '"> ' . $this->getLinkLabel('new content for ' . $item['label'], 'actions-add') . '</a>';
+            $links[] = sprintf('<li><a href="%s">%s</a></li>', htmlspecialchars($link), $item['label']);
+        }
+        if (!empty($links)) {
+            $data[] = '<div class="tx-feediting-dropdown">
+                    <input type="checkbox" id="' . $identifier . '" value="" name="my-checkbox">
+                    <label for="' . $identifier .'"
+                    data-toggle="dropdown">
+                    Choose one
+                    </label>
+                    <ul>
+                    ' . implode(LF, $links) . '
+                    </ul>
+                    </div>';
         }
     }
 
@@ -271,6 +288,7 @@ class EditPanel
     {
         $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
         $assetCollector->addStylesheet('feediting', 'EXT:feediting/Resources/Public/Styles/basic.css');
+        $assetCollector->addJavaScript('feediting', 'EXT:feediting/Resources/Public/JavaScript/popover.js');
     }
 
     protected function getBackendUser(): ?FrontendBackendUserAuthentication

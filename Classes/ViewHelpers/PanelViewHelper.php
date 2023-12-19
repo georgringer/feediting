@@ -38,8 +38,17 @@ class PanelViewHelper extends AbstractTagBasedViewHelper
         if (empty($data)) {
             return '';
         }
-        // todo class optional
-        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $tableName . '">' . $data . '</div>';
+        $identifier = 'trigger' . md5((string)$data . $tableName . $recordId);
+        $content = '
+<div class="popover-container">
+  <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
+
+  <template data-popover="popover-' . $identifier . '">
+    ' . $data . '
+  </template>
+</div>';
+//        }
+        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $tableName . '">' . parent::render($conf) . $content . '</div>';
 
     }
 }

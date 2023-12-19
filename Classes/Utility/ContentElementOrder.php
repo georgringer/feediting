@@ -19,9 +19,8 @@ class ContentElementOrder
 
     public function getList(int $pid, int $colpos, int $language = 0)
     {
-
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('tt_content');
-        $queryResult = $queryBuilder->select('uid', 'header', 'sorting')
+        $queryResult = $queryBuilder->select('uid', 'header', 'sorting', 'pid')
             ->from('tt_content')
             ->where(
                 $queryBuilder->expr()->eq('pid', $queryBuilder->createNamedParameter($pid, Connection::PARAM_INT)),
@@ -35,9 +34,9 @@ class ContentElementOrder
         $prevPrevUid = 0;
         // Get first two rows and initialize prevPrevUid and prevUid if on page > 1
 //        $row = $queryResult->fetchAssociative();
-//        $prevPrevUid = -((int)$row['uid']);
         $row = $queryResult->fetchAssociative();
 
+        $prevPrevUid = ((int)$row['pid']);
         $prevUid = $row['uid'];
         $backendUser = $GLOBALS['BE_USER'];
         // Accumulate rows here

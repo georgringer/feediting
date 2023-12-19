@@ -20,7 +20,18 @@ class EditableFluidTemplateContentObject extends FluidTemplateContentObject
             return parent::render($conf);
         }
         // todo class optional
-        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $tableName . '">' . parent::render($conf) . $data . '</div>';
+//        if ($tableName === 'pages') {
+        $identifier = 'trigger' . md5((string)$data . $tableName . $recordId);
+        $content = '
+<div class="popover-container">
+  <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
+
+  <template data-popover="popover-' . $identifier . '">
+    ' . $data . '
+  </template>
+</div>';
+//        }
+        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $tableName . '">' . parent::render($conf) . $content . '</div>';
     }
 
 
