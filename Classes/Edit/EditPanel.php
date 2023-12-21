@@ -277,13 +277,6 @@ class EditPanel
         return sprintf('<span>%s %s</span>', $icon, $text);
     }
 
-    protected function addStyles()
-    {
-        $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
-        $assetCollector->addStylesheet('feediting', 'EXT:feediting/Resources/Public/Styles/basic.css');
-        $assetCollector->addJavaScript('feediting', 'EXT:feediting/Resources/Public/JavaScript/popover.js');
-    }
-
     protected function getBackendUser(): ?FrontendBackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
@@ -324,22 +317,33 @@ class EditPanel
             return '';
         }
 
-        $this->addStyles();
+        $assetCollector = GeneralUtility::makeInstance(AssetCollector::class);
+        $assetCollector->addStylesheet('feediting', 'EXT:feediting/Resources/Public/Styles/basic.css');
+        $assetCollector->addJavaScript('feediting', 'EXT:feediting/Resources/Public/JavaScript/popover.js');
+
         array_walk($data, static function (string &$value) {
             $value = '<span class="tx-feediting-element">' . $value . '</span>';
         });
-        $inner = '<div class="tx-feediting-panel"><span class="tx-feediting-type">' . $this->tableName . ':<span>' . $this->recordId . '</span></span>' . implode(LF, $data) . '</div>';
+        $inner = '';
 
-        $identifier = 'trigger' . md5($inner);
+        $info = implode(LF, [
+            BackendUtility::getRecordTitle($this->tableName, $this->row),
+            BackendUtility::getProcessedValue($this->tableName, 'CType', $this->row['CType']),
+        ]);
+
+        $identifier = 'trigger' . md5(json_encode($data));
+        $elementInformation = '<span class="tx-feediting-type">' . $info . ':<span>' . $this->recordId . '</span></span>';
         $contentCombined = '
 <div class="popover-container">
   <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
 
   <template data-popover="popover-' . $identifier . '">
-    ' . $inner . '
+    <div class="tx-feediting-panel">'
+            . $elementInformation
+            . implode(LF, $data)
+            . '</div>
   </template>
 </div>';
         return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $contentCombined . '</div>';
     }
-
 }
