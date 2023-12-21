@@ -14,18 +14,8 @@ class PanelViewHelper extends AbstractTagBasedViewHelper
 
     public function initializeArguments(): void
     {
-        $this->registerArgument(
-            'table',
-            'string',
-            'The table to be edited',
-            true
-        );
-        $this->registerArgument(
-            'uid',
-            'int',
-            'Id',
-            true
-        );
+        $this->registerArgument('table', 'string', 'The table to be edited', true);
+        $this->registerArgument('uid', 'int', 'Id', true);
     }
 
     public function render(): string
@@ -38,20 +28,10 @@ class PanelViewHelper extends AbstractTagBasedViewHelper
         }
 
         $editPanel = GeneralUtility::makeInstance(EditPanel::class, $this->renderingContext->getRequest(), $tableName, $recordId, $row);
-        $data = $editPanel->render();
-        if (empty($data)) {
+        $contentWithEditPanel = $editPanel->render('');
+        if (empty($contentWithEditPanel)) {
             return '';
         }
-        $identifier = 'trigger' . md5((string)$data . $tableName . $recordId);
-        $content = '
-<div class="popover-container">
-  <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
-
-  <template data-popover="popover-' . $identifier . '">
-    ' . $data . '
-  </template>
-</div>';
-        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $tableName . '">' . parent::render($conf) . $content . '</div>';
-
+        return $contentWithEditPanel;
     }
 }
