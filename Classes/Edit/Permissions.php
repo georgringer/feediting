@@ -6,7 +6,6 @@ namespace GeorgRinger\Feediting\Edit;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class Permissions
 {
@@ -20,7 +19,7 @@ class Permissions
         return true;
     }
 
-    public function editPage(int $pageId)
+    public function editPage(int $pageId): bool
     {
         $user = $this->getBackendUser();
         if (!$user) {
@@ -36,7 +35,6 @@ class Permissions
         if (!$user) {
             return false;
         }
-//        DebuggerUtility::var_dump($user, $tableName);die;
         $conf = [
             'allow' => 'edit, new, delete, hide, move, localize, versions, permissions, info, history, workspace, recordInfo',
             'onlyCurrentPid' => false,
