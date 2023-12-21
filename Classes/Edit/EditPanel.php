@@ -57,7 +57,7 @@ class EditPanel
         $this->permissionsOfPage = $this->getBackendUser()->calcPerms($this->pageRow);
     }
 
-    public function render(): string
+    public function render(string $content): string
     {
         if (!$this->enabled) {
             return '';
@@ -68,29 +68,8 @@ class EditPanel
             return '';
         }
 
-        $data = [];
-
-        $this->edit($data);
-        $this->move($data);
-        if ($this->tableName === 'tt_content') {
-            $this->moveUpDown($data);
-        }
-        if ($this->tableName === 'pages') {
-            $this->newPage($data);
-            $this->linkToListView($data);
-            $this->newContent($data);
-        } elseif ($this->tableName !== 'tt_content') {
-            $this->newRecord($data);
-        }
-        $this->history($data);
-        if (empty($data)) {
-            return '';
-        }
-        $this->addStyles();
-        array_walk($data, static function (string &$value) {
-            $value = '<span class="tx-feediting-element">' . $value . '</span>';
-        });
-        return '<div class="tx-feediting-panel"><span class="tx-feediting-type">' . $this->tableName . ':<span>' . $this->recordId . '</span></span>' . implode(LF, $data) . '</div>';
+        $data = $this->collectActions();
+        return $this->renderPanel($content, $data);
     }
 
     protected function history(array &$data)
@@ -118,6 +97,20 @@ class EditPanel
         );
         $label = $this->getLinkLabel('edit', 'actions-page-open');
         $data[] = '<a href="' . $link . '">' . $label . '</a>';
+    }
+
+    protected function info(array &$data): void
+    {
+        $link = (string)$this->uriBuilder->buildUriFromRoute(
+            'show_item',
+            [
+                'table' => $this->tableName,
+                'uid' => $this->recordId,
+                'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+            ]
+        );
+        $label = $this->getLinkLabel('info', 'actions-document-info');
+        $data[] = '<a href="' . htmlspecialchars($link) . '">' . $label . '</a>';
     }
 
     protected function move(array &$data): void
@@ -220,7 +213,7 @@ class EditPanel
         if (!empty($links)) {
             $data[] = '<div class="tx-feediting-dropdown">
                     <input type="checkbox" id="' . $identifier . '" value="" name="my-checkbox">
-                    <label for="' . $identifier .'"
+                    <label for="' . $identifier . '"
                     data-toggle="dropdown">
                     Choose one
                     </label>
@@ -299,6 +292,54 @@ class EditPanel
     protected function getTypoScriptFrontendController(): TypoScriptFrontendController
     {
         return $GLOBALS['TSFE'];
+    }
+
+    /**
+     * @return array
+     */
+    protected function collectActions(): array
+    {
+        $data = [];
+
+        $this->edit($data);
+        $this->move($data);
+        if ($this->tableName === 'tt_content') {
+            $this->moveUpDown($data);
+        }
+        if ($this->tableName === 'pages') {
+            $this->newPage($data);
+            $this->linkToListView($data);
+            $this->newContent($data);
+        } elseif ($this->tableName !== 'tt_content') {
+            $this->newRecord($data);
+        }
+        $this->history($data);
+        $this->info($data);
+        return $data;
+    }
+
+    protected function renderPanel(string $content, array $data): string
+    {
+        if (empty($data)) {
+            return '';
+        }
+
+        $this->addStyles();
+        array_walk($data, static function (string &$value) {
+            $value = '<span class="tx-feediting-element">' . $value . '</span>';
+        });
+        $inner = '<div class="tx-feediting-panel"><span class="tx-feediting-type">' . $this->tableName . ':<span>' . $this->recordId . '</span></span>' . implode(LF, $data) . '</div>';
+
+        $identifier = 'trigger' . md5($inner);
+        $contentCombined = '
+<div class="popover-container">
+  <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
+
+  <template data-popover="popover-' . $identifier . '">
+    ' . $inner . '
+  </template>
+</div>';
+        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $contentCombined . '</div>';
     }
 
 }

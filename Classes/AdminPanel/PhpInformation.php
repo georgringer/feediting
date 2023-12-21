@@ -11,11 +11,6 @@ use TYPO3\CMS\Adminpanel\ModuleApi\ModuleData;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
-/**
- * PhpInformation admin panel sub module
- *
- * @internal
- */
 class PhpInformation extends AbstractSubModule implements DataProviderInterface
 {
     public function getIdentifier(): string

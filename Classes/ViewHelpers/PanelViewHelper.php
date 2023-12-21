@@ -33,6 +33,10 @@ class PanelViewHelper extends AbstractTagBasedViewHelper
         $recordId = (int)$this->arguments['uid'];
         $tableName = $this->arguments['table'];
         $row = BackendUtility::getRecord($tableName, $recordId);
+        if (!$row) {
+            return '';
+        }
+
         $editPanel = GeneralUtility::makeInstance(EditPanel::class, $this->renderingContext->getRequest(), $tableName, $recordId, $row);
         $data = $editPanel->render();
         if (empty($data)) {
@@ -47,7 +51,6 @@ class PanelViewHelper extends AbstractTagBasedViewHelper
     ' . $data . '
   </template>
 </div>';
-//        }
         return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $tableName . '">' . parent::render($conf) . $content . '</div>';
 
     }
