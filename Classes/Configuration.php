@@ -29,7 +29,4 @@ class Configuration
     {
         return $this->renderCheck;
     }
-
-
-
 }
