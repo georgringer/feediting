@@ -6,12 +6,14 @@ namespace GeorgRinger\Feediting\Edit;
 use GeorgRinger\Feediting\Service\AccessService;
 use GeorgRinger\Feediting\Utility\ContentElementOrder;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\UriInterface;
 use TYPO3\CMS\Backend\FrontendBackendUserAuthentication;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Backend\View\BackendLayoutView;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -75,19 +77,19 @@ class EditPanel
     protected function history(array &$data)
     {
         // History
-        $link = (string)$this->uriBuilder->buildUriFromRoute(
+        $link = $this->uriBuilder->buildUriFromRoute(
             'record_history',
             [
                 'element' => $this->tableName . ':' . $this->recordId,
                 'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
             ]
         );
-        $data[] = '<a data-fslightbox="history" href="' . htmlspecialchars($link) . '">' . $this->getLinkLabel('history', 'actions-document-history-open') . '</a>';
+        $data[] = $this->generateLink($link, 'actions-document-history-open', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:cm.history', true);
     }
 
     protected function edit(array &$data)
     {
-        $link = (string)$this->uriBuilder->buildUriFromRoute(
+        $link = $this->uriBuilder->buildUriFromRoute(
             'record_edit',
             [
                 'edit[' . $this->tableName . '][' . $this->recordId . ']' => 'edit',
@@ -95,13 +97,12 @@ class EditPanel
                 'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
             ]
         );
-        $label = $this->getLinkLabel('edit', 'actions-page-open');
-        $data[] = '<a href="' . $link . '">' . $label . '</a>';
+        $data[] = $this->generateLink($link, 'actions-page-open', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.edit');
     }
 
     protected function info(array &$data): void
     {
-        $link = (string)$this->uriBuilder->buildUriFromRoute(
+        $link = $this->uriBuilder->buildUriFromRoute(
             'show_item',
             [
                 'table' => $this->tableName,
@@ -109,14 +110,13 @@ class EditPanel
                 'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
             ]
         );
-        $label = $this->getLinkLabel('info', 'actions-document-info');
-        $data[] = '<a href="' . htmlspecialchars($link) . '">' . $label . '</a>';
+        $data[] = $this->generateLink($link, 'actions-document-info', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:cm.info');
     }
 
     protected function move(array &$data): void
     {
         if ($this->tableName === 'pages') {
-            $link = (string)$this->uriBuilder->buildUriFromRoute(
+            $link = $this->uriBuilder->buildUriFromRoute(
                 'move_page',
                 [
                     'uid' => $this->recordId,
@@ -124,7 +124,7 @@ class EditPanel
                 ]
             );
         } else {
-            $link = (string)$this->uriBuilder->buildUriFromRoute(
+            $link = $this->uriBuilder->buildUriFromRoute(
                 'move_element',
                 [
                     'table' => $this->tableName,
@@ -133,8 +133,19 @@ class EditPanel
                 ]
             );
         }
-        $label = $this->getLinkLabel('move', 'actions-document-move');
-        $data[] = '<a href="' . $link . '">' . $label . '</a>';
+        $data[] = $this->generateLink($link, 'actions-document-move', 'LLL:EXT:core/Resources/Private/Language/locallang_common.xlf:move', true);
+    }
+
+    protected function generateLink(UriInterface $link, string $iconIdentifier, string $linkLabel, bool $lightbox = false): string
+    {
+        $icon = $this->iconFactory->getIcon($iconIdentifier, Icon::SIZE_SMALL)->render();
+        $label = $this->getLanguageService()->sL($linkLabel) ?: $linkLabel;
+        $label = sprintf('<span>%s %s</span>', $icon, htmlspecialchars($label));
+        $classList = [];
+        if ($lightbox) {
+            $classList[] = 'tx-feediting-lightbox';
+        }
+        return '<a class="' . implode(' ', $classList) . '" href="' . htmlspecialchars((string)$link, ENT_QUOTES | ENT_HTML5) . '">' . $label . '</a>';
     }
 
     protected function moveUpDown(array &$data): void
@@ -150,17 +161,16 @@ class EditPanel
             $params['redirect'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
             $params['returnUrl'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
             $params['cmd'][$this->tableName][$this->recordId]['move'] = $list[$checkKey][$this->row['uid']];
-            $url = (string)$this->uriBuilder->buildUriFromRoute('tce_db', $params);
+            $url = $this->uriBuilder->buildUriFromRoute('tce_db', $params);
 
-            $label = $this->getLinkLabel('move ' . $direction, 'actions-move-' . $direction);
-            $data[] = '<a href="' . $url . '">' . $label . '</a>';
+            $data[] = $this->generateLink($url, 'actions-move-' . $direction, 'LLL:EXT:core/Resources/Private/Language/locallang_tsfe.xlf:p_move' . ucfirst($direction));
         }
     }
 
-    protected function newPage(array &$data)
+    protected function newPage(array &$data): void
     {
         if ($this->permissionsOfPage & Permission::PAGE_NEW) {
-            $link = (string)$this->uriBuilder->buildUriFromRoute(
+            $link = $this->uriBuilder->buildUriFromRoute(
                 'db_new',
                 [
                     'id' => $this->recordId,
@@ -168,7 +178,7 @@ class EditPanel
                     'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
                 ]
             );
-            $data[] = '<a href="' . htmlspecialchars($link, ENT_QUOTES | ENT_HTML5) . '">' . $this->getLinkLabel('new page', 'actions-page-new') . '</a>';
+            $data[] = $this->generateLink($link, 'actions-page-new', 'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:newPage2');
         }
     }
 
@@ -231,7 +241,7 @@ class EditPanel
         if (!($permissionsOfTargetPage & Permission::CONTENT_EDIT)) {
             return;
         }
-        $link = (string)$this->uriBuilder->buildUriFromRoute('record_edit', [
+        $link = $this->uriBuilder->buildUriFromRoute('record_edit', [
             'edit' => [
                 $this->tableName => [
                     $targetPageRow['uid'] => 'new',
@@ -240,8 +250,10 @@ class EditPanel
             'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
             'defVals' => [],
         ]);
-        $data[] = '<a href="' . htmlspecialchars($link) . '"> ' . $this->getLinkLabel('new record ' . $this->tableName, 'actions-add') . '</a>';
-
+        $tableTitle = $this->getLanguageService()->sL($GLOBALS['TCA'][$this->tableName]['ctrl']['title']) ?: $GLOBALS['TCA'][$this->tableName]['ctrl']['title'] ?: $this->tableName;
+        $targetPageTitle = BackendUtility::getRecordTitle('pages', $targetPageRow);
+        $label = sprintf($this->getLanguageService()->sL('LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.createNewRecord'), $tableTitle, $targetPageTitle);
+        $data[] = $this->generateLink($link, 'actions-add', $label);
     }
 
     protected function clipboard(array &$data)
@@ -251,7 +263,7 @@ class EditPanel
         $icon = $isSel === 'copy' ? 'actions-edit-copy-release' : 'actions-edit-copy';
         $data[] = '
                 <a class="btn btn-default" href="' . htmlspecialchars($copyUrl) . '">
-                    ' . $this->getLinkLabel($icon, $icon) . '
+                ' . $icon . '
                 </a>';
     }
 
@@ -259,37 +271,17 @@ class EditPanel
     {
         // Open list view
         if ($this->getBackendUser()->check('modules', 'web_list')) {
-            $link = (string)$this->uriBuilder->buildUriFromRoute(
+            $link = $this->uriBuilder->buildUriFromRoute(
                 'web_list',
                 [
                     'id' => $this->recordId,
                     'returnUrl' => GeneralUtility::getIndpEnv('REQUEST_URI'),
                 ]
             );
-            $data[] = '<a href="' . htmlspecialchars($link) . '">' . $this->getLinkLabel('link to list', 'actions-system-list-open') . '</a>';
+            $data[] = $this->generateLink($link, 'actions-system-list-open', 'LLL:EXT:backend/Resources/Private/Language/locallang_layout.xlf:goToListModule');
         }
     }
 
-    protected function getLinkLabel(string $text, string $identifier)
-    {
-        $icon = $this->iconFactory->getIcon($identifier, Icon::SIZE_SMALL)->render();
-
-        return sprintf('<span>%s %s</span>', $icon, $text);
-    }
-
-    protected function getBackendUser(): ?FrontendBackendUserAuthentication
-    {
-        return $GLOBALS['BE_USER'];
-    }
-
-    protected function getTypoScriptFrontendController(): TypoScriptFrontendController
-    {
-        return $GLOBALS['TSFE'];
-    }
-
-    /**
-     * @return array
-     */
     protected function collectActions(): array
     {
         $data = [];
@@ -345,5 +337,20 @@ class EditPanel
   </template>
 </div>';
         return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $contentCombined . '</div>';
+    }
+
+    protected function getLanguageService(): LanguageService
+    {
+        return $GLOBALS['LANG'];
+    }
+
+    protected function getBackendUser(): ?FrontendBackendUserAuthentication
+    {
+        return $GLOBALS['BE_USER'];
+    }
+
+    protected function getTypoScriptFrontendController(): TypoScriptFrontendController
+    {
+        return $GLOBALS['TSFE'];
     }
 }
