@@ -324,7 +324,7 @@ class EditPanel
         ]);
 
         $identifier = 'trigger' . md5(json_encode($data));
-        $elementInformation = '<span class="tx-feediting-type">' . $info . ':<span>' . $this->recordId . '</span></span>';
+        $elementInformation = '<div class="tx-feediting-type">' . htmlspecialchars($info) . '[<span>' . $this->recordId . '</span>]</div>';
         $contentCombined = '
 <div class="popover-container">
   <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
