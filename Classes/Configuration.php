@@ -22,7 +22,6 @@ class Configuration
         } else {
             $this->renderCheck = $renderCheck;
         }
-
     }
 
     public function getRenderCheck(): string

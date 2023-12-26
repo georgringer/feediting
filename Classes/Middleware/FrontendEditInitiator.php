@@ -18,7 +18,7 @@ class FrontendEditInitiator implements MiddlewareInterface
         if (isset($GLOBALS['BE_USER']) && $GLOBALS['BE_USER'] instanceof FrontendBackendUserAuthentication) {
             $accessService = new AccessService();
             if ($accessService->enabled()) {
-                $GLOBALS['TSFE']->set_no_cache('Feediting in action', true);
+                $GLOBALS['TSFE']->set_no_cache('EXT:feediting in action', true);
             }
         }
         return $handler->handle($request);

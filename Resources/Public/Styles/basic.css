@@ -13,7 +13,6 @@
 
 .tx-feediting-panel {
     /*background: #eee;*/
-    padding: 2px 10px;
     color: #333 !important;
     /*min-width: 400px;*/
 }
@@ -26,10 +25,17 @@
 
 .tx-feediting-panel .tx-feediting-type {
     font-weight: bold;
+    padding: 5px 10px;
+    background: #eee;
+    border-bottom: 1px solid #ccc;
 }
 
 .tx-feediting-panel .tx-feediting-type span {
     font-style: italic;
+}
+
+.tx-feediting-panel .tx-feediting-actions {
+    padding: 5px 10px;
 }
 
 .tx-feediting-element {
@@ -41,7 +47,7 @@
     --bs-btn-line-height: 1.5;
     --bs-btn-border-width: var(--bs-border-width);
     --bs-btn-border-radius: var(--bs-border-radius);
-    --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),0 1px 1px rgba(0, 0, 0, 0.075);
+    --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
     --bs-btn-disabled-opacity: 0.65;
     --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
 
@@ -51,7 +57,7 @@
     --bs-btn-hover-color: #000;
     --bs-btn-hover-bg: #cacaca;
     --bs-btn-hover-border-color: #bebebe;
-    --bs-btn-focus-shadow-rgb: 159,159,159;
+    --bs-btn-focus-shadow-rgb: 159, 159, 159;
     --bs-btn-active-color: #000;
     --bs-btn-active-bg: #bebebe;
 
@@ -59,7 +65,7 @@
     position: relative;
     padding: 3px;
     margin: 5px 3px;
-    border:1px solid #666;
+    border: 1px solid #666;
     color: var(--bs-btn-color) !important;
     text-align: center;
     vertical-align: middle;
@@ -74,8 +80,9 @@
     border-radius: var(--bs-btn-border-radius);
     background-color: var(--bs-btn-bg);
     box-shadow: var(--bs-btn-box-shadow);
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+
 .tx-feediting-element a {
     color: inherit;
 }
@@ -147,9 +154,9 @@
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    -webkit-box-shadow: 0 3px 8px rgba(0,0,0,.15);
-    -moz-box-shadow: 0 3px 8px rgba(0,0,0,.15);
-    box-shadow: 0 3px 8px rgba(0,0,0,.15);
+    -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+    -moz-box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .15);
 }
 
 .tx-feediting-dropdown > ul a {
@@ -235,7 +242,6 @@
 }
 
 .popover {
-    padding: 1.5em;
     border: 1px solid #aaa;
     border-radius: 4px;
     background: #fff;

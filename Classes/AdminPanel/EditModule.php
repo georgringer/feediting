@@ -21,35 +21,22 @@ class EditModule extends AbstractModule implements ShortInfoProviderInterface
 
     public function getIconIdentifier(): string
     {
-        return 'actions-document-info';
+        return 'feediting-adminpanel-module-icon';
     }
 
     public function getIdentifier(): string
     {
-        return 'feediting_xxxx';
+        return 'feediting';
     }
 
     public function getLabel(): string
     {
-        return 'EXT:feediting';
-        return $this->getLanguageService()->sL(
-            'LLL:EXT:adminpanel/Resources/Private/Language/locallang_info.xlf:module.label'
-        );
+        return $this->getLanguageService()->sL('LLL:EXT:feediting/Resources/Private/Language/locallang_adminpanel.xlf:module.label');
     }
 
     public function getShortInfo(): string
     {
-        return 'this is a short info';
-        $phpInformation = $this->moduleData->offsetGet($this->subModules['info_php']);
-        $parseTime = $this->getTimeTracker()->getParseTime();
-        return sprintf(
-            $this->getLanguageService()->sL(
-                'LLL:EXT:adminpanel/Resources/Private/Language/locallang_info.xlf:module.shortinfoLoadAndMemory'
-            ),
-            $parseTime,
-            $phpInformation['general']['Peak Memory Usage']
-        );
+        return '';
     }
-
 
 }

@@ -332,7 +332,7 @@ class EditPanel
   <template data-popover="popover-' . $identifier . '">
     <div class="tx-feediting-panel">'
             . $elementInformation
-            . implode(LF, $data)
+            . '<div class="tx-feediting-actions">' . implode(LF, $data) . '</div>'
             . '</div>
   </template>
 </div>';

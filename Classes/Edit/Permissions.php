@@ -13,10 +13,7 @@ class Permissions
     public function userLoggedIn(): bool
     {
         $user = $this->getBackendUser();
-        if (!$user) {
-            return false;
-        }
-        return true;
+        return $user !== null && $user->user['uid'] > 0;
     }
 
     public function editPage(int $pageId): bool
@@ -41,7 +38,6 @@ class Permissions
         ];
         return $user->allowedToEdit($tableName, $row, $conf, true);
     }
-
 
     protected function getBackendUser(): ?BackendUserAuthentication
     {
