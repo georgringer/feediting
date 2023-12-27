@@ -15,6 +15,7 @@ use TYPO3\CMS\Core\Imaging\IconFactory;
 use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Type\Bitmask\Permission;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class DefaultEditPanelActionEventListener
@@ -25,6 +26,7 @@ class DefaultEditPanelActionEventListener
     protected string $tableName;
     protected int $recordId;
     protected array $row;
+    protected int $permissionsOfPage;
     protected TypoScriptFrontendController $tsfe;
 
     public function __construct()
@@ -38,6 +40,7 @@ class DefaultEditPanelActionEventListener
         $this->tableName = $event->table;
         $this->recordId = $event->id;
         $this->row = $event->row;
+        $this->permissionsOfPage = $event->permissionsOfPage;
         $this->tsfe = $event->request->getAttribute('frontend.controller');
         $actions = $event->getActions();
 
@@ -140,7 +143,6 @@ class DefaultEditPanelActionEventListener
         );
         $data[] = $this->generateLink($link, 'actions-document-info', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:cm.info');
     }
-
 
     protected function newPage(array &$data): void
     {

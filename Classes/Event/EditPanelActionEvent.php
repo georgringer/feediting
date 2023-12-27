@@ -10,6 +10,7 @@ final class EditPanelActionEvent
 
     public function __construct(
         public readonly ServerRequestInterface $request,
+        public readonly int $permissionsOfPage,
         public readonly string $table,
         public readonly int $id,
         public readonly array $row,

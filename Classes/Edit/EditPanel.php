@@ -11,12 +11,14 @@ use TYPO3\CMS\Backend\FrontendBackendUserAuthentication;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
 
 class EditPanel
 {
 
     protected Permissions $permissions;
     protected bool $enabled = false;
+    protected int $permissionsOfPage;
     protected EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
@@ -37,9 +39,10 @@ class EditPanel
         $this->enabled = true;
         $this->eventDispatcher = GeneralUtility::makeInstance(EventDispatcherInterface::class);
         $this->permissions = GeneralUtility::makeInstance(Permissions::class);
-
+        $pageRow = $this->request->getAttribute('frontend.controller')->page;
 //        $moduleName = BackendUtility::getPagesTSconfig($row['pid'])['mod.']['newContentElementWizard.']['override'] ?? 'new_content_element_wizard';
 //        $perms = $this->getBackendUser()->calcPerms($tsfe->page);
+        $this->permissionsOfPage = $this->getBackendUser()->calcPerms($pageRow);
     }
 
     public function render(string $content): string
@@ -63,6 +66,7 @@ class EditPanel
         $event = $this->eventDispatcher->dispatch(
             new EditPanelActionEvent(
                 $this->request,
+                $this->permissionsOfPage,
                 $this->tableName,
                 $this->recordId,
                 $this->row, $data),
@@ -86,13 +90,15 @@ class EditPanel
             $value = '<span class="tx-feediting-element">' . $value . '</span>';
         });
 
-        $info = implode(LF, [
+        $infos = [
             BackendUtility::getRecordTitle($this->tableName, $this->row),
-            BackendUtility::getProcessedValue($this->tableName, 'CType', $this->row['CType']),
-        ]);
+        ];
+        if ($this->tableName === 'tt_content') {
+            $infos[] = BackendUtility::getProcessedValue($this->tableName, 'CType', $this->row['CType']);
+        }
 
         $identifier = 'trigger' . md5(json_encode($data));
-        $elementInformation = '<div class="tx-feediting-type">' . htmlspecialchars($info) . '[<span>' . $this->recordId . '</span>]</div>';
+        $elementInformation = '<div class="tx-feediting-type">' . htmlspecialchars(implode(LF, $infos)) . '[<span>' . $this->recordId . '</span>]</div>';
         $panel = '
 <div class="popover-container">
   <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
@@ -104,7 +110,7 @@ class EditPanel
             . '</div>
   </template>
 </div>';
-        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $panel . $content . '</div>';
+        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $panel . '</div>';
     }
 
     protected function getBackendUser(): ?FrontendBackendUserAuthentication
