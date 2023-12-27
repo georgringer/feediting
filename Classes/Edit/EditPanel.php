@@ -316,7 +316,6 @@ class EditPanel
         array_walk($data, static function (string &$value) {
             $value = '<span class="tx-feediting-element">' . $value . '</span>';
         });
-        $inner = '';
 
         $info = implode(LF, [
             BackendUtility::getRecordTitle($this->tableName, $this->row),
@@ -325,7 +324,7 @@ class EditPanel
 
         $identifier = 'trigger' . md5(json_encode($data));
         $elementInformation = '<div class="tx-feediting-type">' . htmlspecialchars($info) . '[<span>' . $this->recordId . '</span>]</div>';
-        $contentCombined = '
+        $panel = '
 <div class="popover-container">
   <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">Edit</button>
 
@@ -336,7 +335,7 @@ class EditPanel
             . '</div>
   </template>
 </div>';
-        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $contentCombined . '</div>';
+        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $panel .$content . '</div>';
     }
 
     protected function getLanguageService(): LanguageService
