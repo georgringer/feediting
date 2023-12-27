@@ -1,0 +1,37 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:backend="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+<f:if condition="{rootline}">
+
+    <h2 class="typo3-adminPanel-headline">Rootline</h2>
+    <table class="typo3-adminPanel-table typo3-adminPanel-table-debug">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Level</th>
+            <th>Page</th>
+            <th>Id</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{rootline}" as="page" iteration="i">
+            <f:if condition="{page.uid}">
+                <tr>
+                    <td class="typo3-adminPanel-col typo3-adminPanel-col-icon">
+                        <a style="color:#000" href="{backend:moduleLink(route: 'web_layout', arguments: {id: page.uid})}" class="typo3-adminPanel-backend-url" target="typo3-backend">
+                            <span class="typo3-adminPanel-module-trigger-icon"><core:icon identifier="actions-window-open" alternativeMarkupIdentifier="inline" /></span>
+                            <span class="typo3-adminPanel-module-trigger-label"><f:translate key="LLL:EXT:adminpanel/Resources/Private/Language/locallang.xlf:settings.openBackendUrlLabel" languageKey="{languageKey}" /></span>
+                        </a>
+                    </td>
+                    <td>{i.cycle}</td>
+                    <td>{page.title}</td>
+                    <td>{page.uid}</td>
+                </tr>
+            </f:if>
+        </f:for>
+        </tbody>
+    </table>
+</f:if>
+</html>

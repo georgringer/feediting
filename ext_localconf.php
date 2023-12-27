@@ -9,6 +9,9 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('adminpanel')) 
             'general' => [
                 'module' => \GeorgRinger\Feediting\AdminPanel\Information::class,
             ],
+            'rootline' => [
+                'module' => \GeorgRinger\Feediting\AdminPanel\Rootline::class,
+            ],
 
         ],
     ];

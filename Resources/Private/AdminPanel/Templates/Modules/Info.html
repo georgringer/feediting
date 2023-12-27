@@ -1,4 +1,49 @@
-<html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers" data-namespace-typo3-fluid="true">
-<h2 class="typo3-adminPanel-headline">Todo</h2>
-<p>Show more stuff and actions</p>
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:backend="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+
+<f:if condition="{translatedPages}">
+    <h2 class="typo3-adminPanel-headline">Translations</h2>
+    <table class="typo3-adminPanel-table typo3-adminPanel-table-debug">
+        <thead>
+        <tr>
+            <th>Page ID</th>
+            <th>Language</th>
+            <th>Language ID</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{translatedPages}" as="translation">
+            <tr>
+                <td>{translation.page.uid}</td>
+                <td>{translation.page.title}</td>
+                <td>{translation.language.languageId}</td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</f:if>
+
+<f:if condition="{languagesToTranslateTo}">
+    <h2 class="typo3-adminPanel-headline">New translations</h2>
+    <table class="typo3-adminPanel-table typo3-adminPanel-table-debug">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Language</th>
+        </tr>
+        </thead>
+        <tbody>
+        <f:for each="{languagesToTranslateTo}" as="translation">
+            <tr>
+                <td><a href="{translation.url}">translate</a></td>
+                <td>{translation.title}</td>
+            </tr>
+        </f:for>
+        </tbody>
+    </table>
+</f:if>
 </html>
