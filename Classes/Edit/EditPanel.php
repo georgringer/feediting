@@ -9,18 +9,13 @@ use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use TYPO3\CMS\Backend\FrontendBackendUserAuthentication;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
-use TYPO3\CMS\Core\Localization\LanguageService;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 class EditPanel
 {
 
     protected Permissions $permissions;
-    protected string $moduleName;
-    protected int $permissionsOfPage;
-    protected AccessService $accessService;
     protected bool $enabled = false;
     protected EventDispatcherInterface $eventDispatcher;
 
@@ -34,8 +29,8 @@ class EditPanel
         if (!$this->getBackendUser()) {
             return;
         }
-        $this->accessService = GeneralUtility::makeInstance(AccessService::class);
-        if (!$this->accessService->enabled()) {
+        $accessService = GeneralUtility::makeInstance(AccessService::class);
+        if (!$accessService->enabled()) {
             return;
         }
 
@@ -45,8 +40,6 @@ class EditPanel
 
 //        $moduleName = BackendUtility::getPagesTSconfig($row['pid'])['mod.']['newContentElementWizard.']['override'] ?? 'new_content_element_wizard';
 //        $perms = $this->getBackendUser()->calcPerms($tsfe->page);
-        $pageRow = $request->getAttribute('frontend.controller')->page;
-        $this->permissionsOfPage = $this->getBackendUser()->calcPerms($pageRow);
     }
 
     public function render(string $content): string
@@ -60,8 +53,7 @@ class EditPanel
             return '';
         }
 
-        $data = $this->collectActions();
-        return $this->renderPanel($content, $data);
+        return $this->renderPanel($content);
     }
 
     protected function collectActions(): array
@@ -79,8 +71,9 @@ class EditPanel
         return $event->getActions();
     }
 
-    protected function renderPanel(string $content, array $data): string
+    protected function renderPanel(string $content): string
     {
+        $data = $this->collectActions();
         if (empty($data)) {
             return '';
         }
@@ -114,18 +107,9 @@ class EditPanel
         return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $panel . $content . '</div>';
     }
 
-    protected function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
-    }
-
     protected function getBackendUser(): ?FrontendBackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
     }
 
-    protected function getTypoScriptFrontendController(): TypoScriptFrontendController
-    {
-        return $GLOBALS['TSFE'];
-    }
 }
