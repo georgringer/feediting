@@ -10,7 +10,7 @@ function isInViewport(element) {
 class Popover {
     constructor(trigger, { position = 'top', className = 'popover' }) {
         this.trigger = trigger;
-        this.position = position;
+        this.position = top;
         this.className = className;
         this.orderedPositions = ['top', 'right', 'bottom', 'left'];
 
@@ -43,7 +43,7 @@ class Popover {
 
     show() {
         // document.addEventListener('click', this.handleDocumentEvent);
-        // window.addEventListener('scroll', this.handleWindowEvent);
+        window.addEventListener('scroll', this.handleWindowEvent);
         window.addEventListener('resize', this.handleWindowEvent);
 
         document.body.appendChild(this.popover);
