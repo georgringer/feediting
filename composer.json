@@ -14,7 +14,7 @@
         "typo3/cms-frontend": "^12.4"
     },
     "suggest": {
-        "typo3/cms-adminpanel": "Add additional information to the admin panel",
+        "typo3/cms-adminpanel": "Add additional information to the admin panel"
     },
     "license": [
         "GPL-2.0-or-later"
