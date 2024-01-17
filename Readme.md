@@ -6,6 +6,8 @@ This extension provides the good old edit pencil icons in the frontend to have a
 - Link to the known and powerful backend editing
 - Works with all content elements, pages and records
 
+![screenshot1.png](Resources/Public/Screenshots/screenshot1.png)
+
 ## Requirements
 
 - TYPO3 12 LTS
