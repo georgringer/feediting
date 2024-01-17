@@ -11,7 +11,7 @@ use TYPO3\CMS\Backend\FrontendBackendUserAuthentication;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Page\AssetCollector;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Utility\DebuggerUtility;
+use TYPO3\CMS\Core\Utility\PathUtility;
 
 class EditPanel
 {
@@ -102,7 +102,7 @@ class EditPanel
         $panel = '
 <div class="popover-container">
   <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">
-  <img src="_assets/54ee41c11dcda0af8063f400f6c1692e/Icons/pen-solid.svg">
+  <img src="' . htmlspecialchars(PathUtility::getPublicResourceWebPath('EXT:feediting/Resources/Public/Icons/pen-solid.svg')) . '">
 </button>
 
   <template data-popover="popover-' . $identifier . '">
