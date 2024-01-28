@@ -1,0 +1,25 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+
+  GeorgRinger\Feediting\:
+    resource: '../Classes/*'
+
+  GeorgRinger\Feediting\Edit\Clipboard:
+    public: true
+
+#  GeorgRinger\Feediting\Event\EditPanelActionEvent:
+#    public: true
+
+  GeorgRinger\Feediting\ContentObject\EditableFluidTemplateContentObject:
+    tags:
+      - name: frontend.contentobject
+        identifier: 'FLUIDTEMPLATE'
+
+  GeorgRinger\Feediting\EventListener\DefaultEditPanelActionEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'tx_feediting_defaulteditpanelactioneventlistener'
+        event: GeorgRinger\Feediting\Event\EditPanelActionEvent

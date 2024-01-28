@@ -1,0 +1,2 @@
+# cat=basic/enable/20; type=string; label=How enabled for users
+renderCheck = usersettings

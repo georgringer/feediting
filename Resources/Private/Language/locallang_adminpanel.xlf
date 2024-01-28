@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" original="" datatype="plaintext" date="2023-12-26T17:02:11+01:00">
+		<body>
+			<trans-unit id="module.label" resname="module.label">
+				<source>Feedit</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

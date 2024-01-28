@@ -1,0 +1,32 @@
+{
+    "name": "georgringer/feediting",
+    "type": "typo3-cms-extension",
+    "authors": [
+        {
+            "name": "Georg Ringer",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "typo3/cms-backend": "^12.4",
+        "typo3/cms-beuser": "^12.4",
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-frontend": "^12.4"
+    },
+    "suggest": {
+    },
+    "license": [
+        "GPL-2.0-or-later"
+    ],
+    "autoload": {
+        "psr-4": {
+            "GeorgRinger\\Feediting\\": "Classes"
+        }
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "feediting"
+        }
+    }
+}
