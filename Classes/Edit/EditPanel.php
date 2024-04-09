@@ -112,7 +112,7 @@ class EditPanel
             . '</div>
   </template>
 </div>';
-        return '<div class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $panel . '</div>';
+        return '<div id="tx-feediting' . $this->row['uid'] . '" class="tx-feediting-fluidtemplate tx-feediting-fluidtemplate-' . $this->tableName . '">' . $content . $panel . '</div>';
     }
 
     protected function getBackendUser(): ?FrontendBackendUserAuthentication

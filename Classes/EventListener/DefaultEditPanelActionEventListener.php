@@ -70,7 +70,7 @@ class DefaultEditPanelActionEventListener
             [
                 'edit[' . $this->tableName . '][' . $this->recordId . ']' => 'edit',
                 'noView' => 1,
-                'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                'returnUrl' => $this->getReturnUrl(),
             ]
         );
         $data[] = $this->generateLink($link, 'actions-page-open', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:labels.edit');
@@ -83,7 +83,7 @@ class DefaultEditPanelActionEventListener
                 'move_page',
                 [
                     'uid' => $this->recordId,
-                    'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                    'returnUrl' => $this->getReturnUrl(),
                 ]
             );
         } else {
@@ -92,7 +92,7 @@ class DefaultEditPanelActionEventListener
                 [
                     'table' => $this->tableName,
                     'uid' => $this->recordId,
-                    'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                    'returnUrl' => $this->getReturnUrl(),
                 ]
             );
         }
@@ -109,8 +109,8 @@ class DefaultEditPanelActionEventListener
                 continue;
             }
             $params = [];
-            $params['redirect'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
-            $params['returnUrl'] = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
+            $params['redirect'] = $this->getReturnUrl();
+            $params['returnUrl'] = $this->getReturnUrl();
             $params['cmd'][$this->tableName][$this->recordId]['move'] = $list[$checkKey][$this->row['uid']];
             $url = $this->uriBuilder->buildUriFromRoute('tce_db', $params);
 
@@ -125,7 +125,7 @@ class DefaultEditPanelActionEventListener
             'record_history',
             [
                 'element' => $this->tableName . ':' . $this->recordId,
-                'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                'returnUrl' => $this->getReturnUrl(),
             ]
         );
         $data[] = $this->generateLink($link, 'actions-document-history-open', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:cm.history', true);
@@ -138,7 +138,7 @@ class DefaultEditPanelActionEventListener
             [
                 'table' => $this->tableName,
                 'uid' => $this->recordId,
-                'returnUrl' => GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'),
+                'returnUrl' => $this->getReturnUrl(),
             ]
         );
         $data[] = $this->generateLink($link, 'actions-document-info', 'LLL:EXT:core/Resources/Private/Language/locallang_core.xlf:cm.info');
@@ -281,6 +281,11 @@ class DefaultEditPanelActionEventListener
     protected function getBackendUser(): ?FrontendBackendUserAuthentication
     {
         return $GLOBALS['BE_USER'];
+    }
+
+    protected function getReturnUrl(): string
+    {
+        return GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL') . '#tx-feediting' . $this->recordId;
     }
 
 }
