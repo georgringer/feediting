@@ -100,13 +100,13 @@ class EditPanel
         $identifier = 'trigger' . md5(json_encode($data));
         $elementInformation = '<div class="tx-feediting-type">' . htmlspecialchars(implode(LF, $infos)) . '[<span>' . $this->recordId . '</span>]</div>';
         $panel = '
-<div class="popover-container">
+<div class="popover-container ' . $this->tableName . '">
   <button class="feediting-popover-trigger" data-position="top" data-popover-target="popover-' . $identifier . '">
   <img src="' . htmlspecialchars(PathUtility::getPublicResourceWebPath('EXT:feediting/Resources/Public/Icons/pen-solid.svg')) . '">
 </button>
 
   <template data-popover="popover-' . $identifier . '">
-    <div class="tx-feediting-panel">'
+    <div class="tx-feediting-panel ' . $this->tableName . '">'
             . $elementInformation
             . '<div class="tx-feediting-actions">' . implode(LF, $data) . '</div>'
             . '</div>
